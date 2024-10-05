@@ -1,0 +1,51 @@
+กลุ่ม:DriveNow
+สมาชิก SEC2
+ระบบจัดการการเช่ารถยนต์
+1.นางสาวอริสรา คำแสง 6706022510026
+2.นายนครินทร์ ศิริอัฐ 6706022510093
+3.นาย บุณยกร จิรรัตนสัจจพร 6706022510107
+4.นางสาวสุรางคณา ศรีบุญเรือง 6706022510115
+แก้ไข
+เพิ่มประเภทรถ ,สรุปรายได้แต่ละประเภท และ รายได้รวม
+ฟิลด์
+1.customer_name VARCHAR(100)
+2.car_model VARCHAR(100)
+3.car_type VARCHAR(50)
+4.rent_date DATE
+5.return_date DATE
+6.total_cost DECIMAL(10, 2)
+ตัวอย่างรายงาน
+Report date : 2024-09-20
+================================================================================
+|No. | customer name    | car model     | car type | rent date  | return date | total cost|
+|1   | Michael Johnson  | Nissan Altima | Sedan    | 2024-09-05 | 2024-09-10  |  220      |        
+|2   | David Wilson     | Ford Mustang  | Coupe    | 2024-09-08 | 2024-09-12  |  400      |
+|3   | Daniel Garcia    | Honda CR-V    | SUV      | 2024-09-11 | 2024-09-15  |  500      |
+|4   | Sarah Lee        | Toyota Corolla| Sedan    | 2024-09-12 | 2024-09-18  |  300      |
+|5   | Robert King      | Audi A5       | Coupe    | 2024-09-16 | 2024-09-19  |  480      |
+|6   | Emma Davis       | Hyundai Sonata| Sedan    | 2024-09-16 | 2024-09-22  |  400      |
+================================================================================
+Rental statistics
+================================================================================
+Rental amount : 4      
+Maximum rent  : 500    
+Lowest rent   : 220    
+Total income  : 2300
+================================================================================
+Statistics by car type
+================================================================================
+
+| car type |Total rentals| Total income |
+| Sedan    | 3           | 920          |
+| Coupe    | 2           | 880          |
+| SUV      | 1           | 500          |
+
+Total income : 2300
+
+================================================================================
+Highest income from car type: Sedan 920
+Lowest income from car type : SUV 500
+Most rented type : Sedan
+Least rented type: SUV
+แก้ไข
+เพิ่มประเภทรถ ,สรุปรายได้แต่ละประเภท และ รายได้รวม
