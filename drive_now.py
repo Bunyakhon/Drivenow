@@ -1,6 +1,6 @@
 import time
 import func_drive_now as fdn
-# from prettytable import PrettyTable
+import gen_report as re
 def main():
     try:
         keep_going = True
@@ -36,8 +36,7 @@ def main():
                     output = fdn.delet_data(number_menu)
                     time.sleep(1)
                 elif number_menu == 5:
-                    output = fdn.report_data(number_menu)
-                    print(output)
+                    output = re.report_data(number_menu)
                     time.sleep(1)
                 elif number_menu == 6:
                     print("จบการทำงาน")

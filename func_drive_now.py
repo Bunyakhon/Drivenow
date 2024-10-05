@@ -295,13 +295,28 @@ def search_data(menu_number):
 
 def rent_car(menu_number):
     detail_car = {
-        "Nissan Altima": "Sedan",
-        "Ford Mustang": "Coupe",
-        "Honda CR-V": "SUV",
-        "Toyota Corolla": "Sedan",
-        "Audi A5": "Coupe",
-        "Hyundai Sonata": "Sedan"
-    }
+                "Nissan Altima": "Sedan",
+                "Ford Mustang": "Coupe",
+                "Honda CR-V": "SUV",
+                "Toyota Corolla": "Sedan",
+                "Audi A5": "Coupe",
+                "Hyundai Sonata": "Sedan",
+                "BMW X5": "SUV",
+                "Tesla Model 3": "Sedan",
+                "Mercedes GLA": "SUV",
+                "Chevy Camaro": "Coupe",
+                "Mazda CX-5": "SUV",
+                "Subaru Impreza": "Sedan",
+                "Porsche 911": "Coupe",
+                "Lexus RX": "SUV",
+                "Volvo XC90": "SUV",
+                "Jaguar F-Type": "Coupe",
+                "Ford F-150": "Truck",
+                "Dodge Challenger": "Coupe",
+                "Kia Sorento": "SUV",
+                "Volkswagen Passat": "Sedan",
+                "Ford Explorer": "SUV"
+            }
     if menu_number == 2:
         try:
             keep_going = True
@@ -363,8 +378,7 @@ def rent_car(menu_number):
         except Exception as e:
             print(f"เกิดข้อผิดพลาด: {e}")
                    
-import struct
-from prettytable import PrettyTable
+
 
 def edit_data_customer(menu_number):
     if menu_number == 3:
@@ -432,13 +446,28 @@ def edit_data_customer(menu_number):
                                     new_model = input("กรุณากรอกแบบรถใหม่: ")
                                     
                                     detail_car = {
-                                        "Nissan Altima": "Sedan",
-                                        "Ford Mustang": "Coupe",
-                                        "Honda CR-V": "SUV",
-                                        "Toyota Corolla": "Sedan",
-                                        "Audi A5": "Coupe",
-                                        "Hyundai Sonata": "Sedan"
-                                    }
+                                                "Nissan Altima": "Sedan",
+                                                "Ford Mustang": "Coupe",
+                                                "Honda CR-V": "SUV",
+                                                "Toyota Corolla": "Sedan",
+                                                "Audi A5": "Coupe",
+                                                "Hyundai Sonata": "Sedan",
+                                                "BMW X5": "SUV",
+                                                "Tesla Model 3": "Sedan",
+                                                "Mercedes GLA": "SUV",
+                                                "Chevy Camaro": "Coupe",
+                                                "Mazda CX-5": "SUV",
+                                                "Subaru Impreza": "Sedan",
+                                                "Porsche 911": "Coupe",
+                                                "Lexus RX": "SUV",
+                                                "Volvo XC90": "SUV",
+                                                "Jaguar F-Type": "Coupe",
+                                                "Ford F-150": "Truck",
+                                                "Dodge Challenger": "Coupe",
+                                                "Kia Sorento": "SUV",
+                                                "Volkswagen Passat": "Sedan",
+                                                "Ford Explorer": "SUV"
+                                            }
                                     
                                     if new_model not in detail_car:
                                         print("รถรุ่นที่เลือกไม่มีในรายการ โปรดลองอีกครั้ง")
@@ -495,8 +524,42 @@ def edit_data_customer(menu_number):
 
 def delet_data(menu_number):
     if menu_number == 4:
-        print("ลบข้อมูล...")
-        
-def report_data(menu_number):
-    if menu_number == 5:
-        print("รายงานข้อมูล...")
+        try:
+            delete_id = int(input("กรุณากรอกลำดับที่ผู้เช่าที่ต้องการลบ: "))
+            found = False
+            records = []
+            try:
+                with open("Doc/datas_drive_now.bin", "rb") as file:
+                    record_size = struct.calcsize("i100s50s50s15s15sf")
+                    
+                    while True:
+                        record_data = file.read(record_size)
+                        if not record_data:
+                            break
+                        
+                        record = struct.unpack("i100s50s50s15s15sf", record_data)
+                        if record[0] == delete_id:
+                            found = True 
+                        else:
+                            records.append(record)  
+            except Exception as e:
+                print(f"เกิดข้อผิดพลาดในการอ่านข้อมูล: {e}")
+
+            if found:
+                confirmation = input(f"คุณแน่ใจหรือไม่ว่าต้องการลบข้อมูลของผู้เช่าลำดับที่ {delete_id}? (y/n): ").lower()
+                if confirmation == 'y':
+                    try:
+                        with open("Doc/datas_drive_now.bin", "wb") as file:
+                            for rec in records:
+                                file.write(struct.pack("i100s50s50s15s15sf", *rec))
+                            print("ข้อมูลถูกลบเรียบร้อยแล้ว")
+
+                    except Exception as e:
+                        print(f"เกิดข้อผิดพลาดในการบันทึกข้อมูล: {e}")
+                else:
+                    print("การลบถูกยกเลิก")
+            else:
+                print(f"ไม่พบข้อมูลสำหรับลำดับที่: {delete_id}")
+
+        except Exception as e:
+            print(f"เกิดข้อผิดพลาด: {e}")
