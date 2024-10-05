@@ -19,3 +19,6 @@ def get_next_id():
     except Exception as e:
         print(f"เกิดข้อผิดพลาดในการอ่านข้อมูล: {e}")
         return 1
+def serach_data_file():
+    
+    return "file"

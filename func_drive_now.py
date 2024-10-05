@@ -1,7 +1,7 @@
 import datetime
 import struct
 import extension.extensions_drive_now as ex
-
+from prettytable import PrettyTable
 
 def search_data(menu_number):
     if menu_number == 1:
@@ -12,21 +12,286 @@ def search_data(menu_number):
                 print("---------------------------------------------------------")
                 print("1. แสดงข้อมูลทั้งหมด")
                 print("2. ค้นหาเฉพาะ")
-                print("3. ออกจากเมนูการเช่ารถ")
+                print("3. ออกจากเมนูการค้นหาข้อมูล")
                 print("---------------------------------------------------------")
                 search_data_menu = int(input("กรุณาเลือกรายการ : ")) 
                 
                 if search_data_menu == 1:
-                    pass
+                    try:
+                        with open("Doc/datas_drive_now.bin", "rb") as file:
+                            records = []
+                            record_size = struct.calcsize("i100s50s50s15s15sf")
+                            
+                            while True:
+                                record_data = file.read(record_size)
+                                if not record_data:
+                                    print("ไม่พบข้อมูล")
+                                    break
+                                record = struct.unpack("i100s50s50s15s15sf", record_data)
+                                records.append(record)
+
+                            print("ข้อมูลทั้งหมดที่เช่ารถ:")
+                            table = PrettyTable()
+                            table.field_names = ["No.", "Customer Name", "Car Model", "Car Type", "Rent Date", "Return Date", "Total Cost"]
+                            for record in records:
+                                table.add_row([
+                                    record[0],
+                                    record[1].decode().strip(),
+                                    record[2].decode().strip(),
+                                    record[3].decode().strip(),
+                                    record[4].decode().strip(),
+                                    record[5].decode().strip(),
+                                    record[6]
+                                ])
+                            print("ข้อมูลทั้งหมดที่เช่ารถ:")
+                            print(table)
+                    except Exception as e:
+                        print(f"เกิดข้อผิดพลาดในการอ่านข้อมูล: {e}")
+                        return None
+                
                 elif search_data_menu == 2:
-                    pass
+                    try:
+                        keep_going2 = True
+                        while keep_going2:
+                            print("\t\t\tรายการเมนูค้นหาข้อมูลเฉพาะ")
+                            print("---------------------------------------------------------")
+                            print("1. No.")
+                            print("2. customer name")
+                            print("3. car Model")
+                            print("4. car type")
+                            # print("5. rent date")
+                            # print("6. return date")
+                            print("7. ออกจากเมนูการค้นหาข้อมูล")
+                            print("---------------------------------------------------------")
+                            search_data_menu = int(input("กรุณาเลือกรายการ : ")) 
+                            if search_data_menu == 1:
+                                search_id = int(input("กรุณากรอกลำดับที่ที่ต้องการค้นหา: "))
+                                try:
+                                    with open("Doc/datas_drive_now.bin", "rb") as file:
+                                        record_size = struct.calcsize("i100s50s50s15s15sf")
+                                        found = False
+
+                                        table = PrettyTable()
+                                        table.field_names = ["No.", "Customer Name", "Car Model", "Car Type", "Rent Date", "Return Date", "Total Cost"]
+
+                                        while True:
+                                            record_data = file.read(record_size)
+                                            if not record_data:
+                                                break 
+                                            
+                                            record = struct.unpack("i100s50s50s15s15sf", record_data)
+                                            if record[0] == search_id:
+                                                found = True
+                                                table.add_row([
+                                                    record[0],
+                                                    record[1].decode().strip(),
+                                                    record[2].decode().strip(),
+                                                    record[3].decode().strip(),
+                                                    record[4].decode().strip(),
+                                                    record[5].decode().strip(),
+                                                    record[6]
+                                                ])
+                                                break
+                                        if found:
+                                            print("ข้อมูลทั้งหมดที่ของผู้เเช่ารถ:")
+                                            print(table)
+                                        else:
+                                            print(f"ไม่พบข้อมูล No : {search_id}")
+
+                                except Exception as e:
+                                    print(f"เกิดข้อผิดพลาดในการค้นหาข้อมูล: {e}")
+                            elif search_data_menu == 2:
+                                search_name = input("กรุณากรอกชื่อที่ต้องการค้นหา: ")
+                                try:
+                                    with open("Doc/datas_drive_now.bin", "rb") as file:
+                                        record_size = struct.calcsize("i100s50s50s15s15sf")
+                                        found = False
+
+                                        table = PrettyTable()
+                                        table.field_names = ["No.", "Customer Name", "Car Model", "Car Type", "Rent Date", "Return Date", "Total Cost"]
+
+                                        while True:
+                                            record_data = file.read(record_size)
+                                            if not record_data:
+                                                break
+                                            
+                                            record = struct.unpack("i100s50s50s15s15sf", record_data)
+                                            if search_name.lower() in record[1].decode().lower():
+                                                found = True
+                                                table.add_row([
+                                                    record[0],
+                                                    record[1].decode().strip(),
+                                                    record[2].decode().strip(),
+                                                    record[3].decode().strip(),
+                                                    record[4].decode().strip(),
+                                                    record[5].decode().strip(),
+                                                    record[6]
+                                                ])
+                                        
+                                        if found:
+                                            print("ข้อมูลทั้งหมดที่ของผู้เช่ารถ:")
+                                            print(table)
+                                        else:
+                                            print(f"ไม่พบข้อมูล Customer Name: {search_name}")
+
+                                except Exception as e:
+                                    print(f"เกิดข้อผิดพลาดในการค้นหาข้อมูล: {e}")
+                            elif search_data_menu == 3:
+                                search_model = input("กรุณากรอกรถรุ่นที่ต้องการค้นหา: ")
+                                try:
+                                    with open("Doc/datas_drive_now.bin", "rb") as file:
+                                        record_size = struct.calcsize("i100s50s50s15s15sf")
+                                        found = False
+                                        
+                                        table = PrettyTable()
+                                        table.field_names = ["No.", "Customer Name", "Car Model", "Car Type", "Rent Date", "Return Date", "Total Cost"]
+
+                                        while True:
+                                            record_data = file.read(record_size)
+                                            if not record_data:
+                                                break
+                                            
+                                            record = struct.unpack("i100s50s50s15s15sf", record_data)
+                                            if search_model.lower() in record[2].decode().lower():
+                                                found = True
+                                                table.add_row([
+                                                    record[0],
+                                                    record[1].decode().strip(),
+                                                    record[2].decode().strip(),
+                                                    record[3].decode().strip(),
+                                                    record[4].decode().strip(),
+                                                    record[5].decode().strip(),
+                                                    record[6]
+                                                ])
+                                        
+                                        if found:
+                                            print("ข้อมูลทั้งหมดที่ของผู้เช่ารถ:")
+                                            print(table)
+                                        else:
+                                            print(f"ไม่พบข้อมูล Car Moderl: {search_model}")
+
+                                except Exception as e:
+                                    print(f"เกิดข้อผิดพลาดในการค้นหาข้อมูล: {e}")
+                            elif search_data_menu == 4:
+                                search_type = input("กรุณากรอกประเภทของรถที่ต้องการค้นหา: ")
+                                try:
+                                    with open("Doc/datas_drive_now.bin", "rb") as file:
+                                        record_size = struct.calcsize("i100s50s50s15s15sf")
+                                        found = False
+                                        
+                                        table = PrettyTable()
+                                        table.field_names = ["No.", "Customer Name", "Car Model", "Car Type", "Rent Date", "Return Date", "Total Cost"]
+
+                                        while True:
+                                            record_data = file.read(record_size)
+                                            if not record_data:
+                                                break
+                                            
+                                            record = struct.unpack("i100s50s50s15s15sf", record_data)
+                                            if search_type.lower() in record[3].decode().lower():
+                                                found = True
+                                                table.add_row([
+                                                    record[0],
+                                                    record[1].decode().strip(),
+                                                    record[2].decode().strip(),
+                                                    record[3].decode().strip(),
+                                                    record[4].decode().strip(),
+                                                    record[5].decode().strip(),
+                                                    record[6]
+                                                ])
+                                        
+                                        if found:
+                                            print("ข้อมูลทั้งหมดที่ของผู้เช่ารถ:")
+                                            print(table)
+                                        else:
+                                            print(f"ไม่พบข้อมูล Car Type: {search_type}")
+
+                                except Exception as e:
+                                    print(f"เกิดข้อผิดพลาดในการค้นหาข้อมูล: {e}")        
+                            # elif search_data_menu == 5:
+                            #     search_rent_date = input("กรุณากรอกวันที่เช่าที่ต้องการค้นหา (YYYY/MM/DD): ")
+                            #     try:
+                            #         with open("Doc/datas_drive_now.bin", "rb") as file:
+                            #             record_size = struct.calcsize("i100s50s50s15s15sf")
+                            #             found = False
+
+                            #             table = PrettyTable()
+                            #             table.field_names = ["No.", "Customer Name", "Car Model", "Car Type", "Rent Date", "Return Date", "Total Cost"]
+
+                            #             while True:
+                            #                 record_data = file.read(record_size)
+                            #                 if not record_data:
+                            #                     break
+                                            
+                            #                 record = struct.unpack("i100s50s50s15s15sf", record_data)
+                            #                 if search_rent_date == record[4].decode().strip():
+                            #                     found = True
+                            #                     table.add_row([
+                            #                         record[0],
+                            #                         record[1].decode().strip(),
+                            #                         record[2].decode().strip(),
+                            #                         record[3].decode().strip(),
+                            #                         record[4].decode().strip(),
+                            #                         record[5].decode().strip(),
+                            #                         record[6]
+                            #                     ])
+                                        
+                            #             if found:
+                            #                 print("ข้อมูลทั้งหมดที่ของผู้เช่ารถ:")
+                            #                 print(table)
+                            #             else:
+                            #                 print(f"ไม่พบข้อมูล Rent Date: {search_rent_date}")
+
+                            #     except Exception as e:
+                            #         print(f"เกิดข้อผิดพลาดในการค้นหาข้อมูล: {e}")
+                            # elif search_data_menu == 6:
+                                search_return_date = input("กรุณากรอกวันที่คืนที่ต้องการค้นหา (YYYY/MM/DD): ")
+                                try:
+                                    with open("Doc/datas_drive_now.bin", "rb") as file:
+                                        record_size = struct.calcsize("i100s50s50s15s15sf")
+                                        found = False
+
+                                        table = PrettyTable()
+                                        table.field_names = ["No.", "Customer Name", "Car Model", "Car Type", "Rent Date", "Return Date", "Total Cost"]
+
+                                        while True:
+                                            record_data = file.read(record_size)
+                                            if not record_data:
+                                                break
+                                            
+                                            record = struct.unpack("i100s50s50s15s15sf", record_data)
+                                            if search_return_date == record[5].decode().strip():
+                                                found = True
+                                                table.add_row([
+                                                    record[0],
+                                                    record[1].decode().strip(),
+                                                    record[2].decode().strip(),
+                                                    record[3].decode().strip(),
+                                                    record[4].decode().strip(),
+                                                    record[5].decode().strip(),
+                                                    record[6]
+                                                ])
+                                        
+                                        if found:
+                                            print("ข้อมูลทั้งหมดที่ของผู้เช่ารถ:")
+                                            print(table)
+                                        else:
+                                            print(f"ไม่พบข้อมูล Return Date: {search_return_date}")
+
+                                except Exception as e:
+                                    print(f"เกิดข้อผิดพลาดในการค้นหาข้อมูล: {e}")
+                            elif search_data_menu == 7:
+                                print("ออกจากเมนูการค้นหาข้อมูลเฉพาะ")
+                                keep_going2 = False
+                            else:
+                                print("เมนูที่เลือกไม่ถูกต้อง")
+                    except Exception as e:
+                        print(f"เกิดข้อผิดพลาด: {e}")
                 elif search_data_menu == 3:
                     print("ออกจากเมนูการค้นหาข้อมูล")
                     keep_going = False
-                else:
-                    print("เมนูที่เลือกไม่ถูกต้อง")
         except Exception as e:
-            print(f"เกิดข้อผิดพลาด: {e}")   
+            print(f"เกิดข้อผิดพลาด: {e}") 
 
 def rent_car(menu_number):
     detail_car = {

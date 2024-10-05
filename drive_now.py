@@ -1,6 +1,6 @@
 import time
 import func_drive_now as fdn
-
+# from prettytable import PrettyTable
 def main():
     try:
         keep_going = True
@@ -11,9 +11,9 @@ def main():
             print("==========================================================")
             print("1. ค้นหาข้อมูล")
             print("2. จองรถ")
-            print("3. แก้ไขข้อมูลการจองรถ")
-            print("4. ลบข้อมูล")
-            print("5. รายงานข้อมูล")
+            print("3. แก้ไขข้อมูลการเช่ารถ")
+            print("4. ลบข้อมูลการเช่ารถ")
+            print("5. รายงานข้อมูลการเช่า")
             print("6. ปิดโปรแกรม")
             print("==========================================================")
 
@@ -21,7 +21,6 @@ def main():
                 number_menu = int(input("กรุณาใส่หมายเลข : "))
                 if number_menu == 1:
                     output = fdn.search_data(number_menu)
-                    print(output)
                     time.sleep(3)
                 elif number_menu == 2:
                     rental_info = fdn.rent_car(number_menu)
