@@ -1,53 +1,63 @@
-import time
-import func_drive_now as fdn
-import gen_report as re
-def main():
-    try:
-        keep_going = True
-        rental_info = {}  # ประกาศตัวแปร rental_info เพื่อใช้ในเมนูที่ 2
-        while keep_going:
-            print("="*80)
-            print("\t\t\t\tรายการเมนู")
-            print("="*80)
-            print("1. ค้นหาข้อมูล")
-            print("2. จองรถ")
-            print("3. แก้ไขข้อมูลการเช่ารถ")
-            print("4. ลบข้อมูลการเช่ารถ")
-            print("5. รายงานข้อมูลการเช่า")
-            print("6. ปิดโปรแกรม")
-            print("="*80)
-            try:
-                number_menu = int(input("กรุณาใส่หมายเลข : "))
-                if number_menu == 1:
-                    output = fdn.search_data(number_menu)
-                    time.sleep(1)
-                elif number_menu == 2:
-                    rental_info = fdn.rent_car(number_menu)
-                    if rental_info:
-                        print("\nข้อมูลการเช่าที่ได้รับ:")
-                        for key, value in rental_info.items():
-                            print(f"{key}: {value}")
-                    time.sleep(1)
-                elif number_menu == 3:
-                    output = fdn.edit_data_customer(number_menu)
-                    time.sleep(1)
-                elif number_menu == 4:
-                    output = fdn.delet_data(number_menu)
-                    time.sleep(1)
-                elif number_menu == 5:
-                    output = re.report_data(number_menu)
-                    time.sleep(1)
-                elif number_menu == 6:
-                    print("จบการทำงาน")
-                    keep_going = False
-                else:
-                    print("ใส่หมายเลขเมนูให้ถูกต้อง")
-                    time.sleep(1)
-            except ValueError:
-                print("กรุณาใส่หมายเลขให้ถูกต้อง")
-                time.sleep(1)
-    except Exception as e:
-        print(f"เกิดข้อผิดพลาด: {e}")
+import time              # นำเข้าโมดูล time เพื่อใช้ในการหน่วงเวลาระหว่างการทำงานของโปรแกรม
+import func_drive_now as fdn   # นำเข้าโมดูล func_drive_now และเรียกใช้งานโดยใช้ชื่อย่อ fdn
+import gen_report as re        # นำเข้าโมดูล gen_report และเรียกใช้งานโดยใช้ชื่อย่อ re
 
-if __name__ == "__main__":
-    main()
+def main():   # ฟังก์ชันหลักที่เริ่มการทำงานของโปรแกรม
+    try:
+        keep_going = True   # ตัวแปรควบคุมการทำงานของลูปเพื่อให้โปรแกรมทำงานต่อไป
+        rental_info = {}    # สร้างตัวแปรเก็บข้อมูลการเช่ารถเป็นรูปแบบ dictionary
+        while keep_going:   # วนลูปเพื่อให้โปรแกรมแสดงเมนูซ้ำจนกว่าจะถูกสั่งให้หยุด
+            print("="*100)   # แสดงเส้นคั่นหน้าจอเพื่อความสวยงาม
+            print("\t\t\t\t\tรายการเมนู")   # แสดงหัวข้อเมนูหลัก
+            print("="*100)
+            print("1. ค้นหาข้อมูล")   # แสดงตัวเลือกเมนูสำหรับการค้นหาข้อมูล
+            print("2. จองรถ")         # แสดงตัวเลือกเมนูสำหรับการจองรถ
+            print("3. แก้ไขข้อมูลการเช่ารถ")   # แสดงตัวเลือกเมนูสำหรับการแก้ไขข้อมูลการเช่ารถ
+            print("4. ลบข้อมูลการเช่ารถ")     # แสดงตัวเลือกเมนูสำหรับการลบข้อมูลการเช่ารถ
+            print("5. รายงานข้อมูลการเช่า")   # แสดงตัวเลือกเมนูสำหรับการรายงานข้อมูลการเช่ารถ
+            print("6. ปิดโปรแกรม")    # แสดงตัวเลือกเมนูสำหรับการปิดโปรแกรม
+            print("="*100)
+
+            try:
+                number_menu = int(input("กรุณาใส่หมายเลข : "))  # รับข้อมูลจากผู้ใช้ และพยายามแปลงเป็นประเภทจำนวนเต็มเพื่อใช้ในการเลือกเมนู
+                if number_menu == 1:    # ถ้าผู้ใช้เลือกเมนูหมายเลข 1 (ค้นหาข้อมูล)
+                    output = fdn.search_data(number_menu)   # เรียกใช้ฟังก์ชัน search_data จากโมดูล func_drive_now
+                    time.sleep(1)    # หน่วงเวลาการทำงาน 1 วินาทีเพื่อให้การแสดงผลต่อเนื่อง
+
+                elif number_menu == 2:   # ถ้าผู้ใช้เลือกเมนูหมายเลข 2 (จองรถ)
+                    rental_info = fdn.rent_car(number_menu)   # เรียกใช้ฟังก์ชัน rent_car จากโมดูล func_drive_now เพื่อจองรถ
+                    if rental_info:   # ถ้ามีข้อมูลการจองรถส่งกลับมา (ไม่ใช่ None)
+                        print("\nข้อมูลการเช่าที่ได้รับ:")   # แสดงข้อมูลการเช่าที่ได้รับ
+                        for key, value in rental_info.items():   # วนลูปผ่าน key และ value ใน dictionary rental_info
+                            print(f"{key}: {value}")   # แสดงข้อมูลการเช่าในรูปแบบ 'key: value'
+                    time.sleep(1)    # หน่วงเวลาการทำงาน 1 วินาที
+
+                elif number_menu == 3:   # ถ้าผู้ใช้เลือกเมนูหมายเลข 3 (แก้ไขข้อมูลการเช่ารถ)
+                    output = fdn.edit_data_customer(number_menu)   # เรียกใช้ฟังก์ชัน edit_data_customer จากโมดูล func_drive_now เพื่อแก้ไขข้อมูล
+                    time.sleep(1)    # หน่วงเวลาการทำงาน 1 วินาที
+
+                elif number_menu == 4:   # ถ้าผู้ใช้เลือกเมนูหมายเลข 4 (ลบข้อมูลการเช่ารถ)
+                    output = fdn.delet_data(number_menu)   # เรียกใช้ฟังก์ชัน delet_data จากโมดูล func_drive_now เพื่อลบข้อมูล
+                    time.sleep(1)    # หน่วงเวลาการทำงาน 1 วินาที
+
+                elif number_menu == 5:   # ถ้าผู้ใช้เลือกเมนูหมายเลข 5 (รายงานข้อมูลการเช่า)
+                    output = re.report_data(number_menu)   # เรียกใช้ฟังก์ชัน report_data จากโมดูล gen_report เพื่อแสดงรายงานข้อมูลการเช่า
+                    time.sleep(1)    # หน่วงเวลาการทำงาน 1 วินาที
+
+                elif number_menu == 6:   # ถ้าผู้ใช้เลือกเมนูหมายเลข 6 (ปิดโปรแกรม)
+                    print("จบการทำงาน")   # แสดงข้อความแจ้งว่าจบการทำงาน
+                    keep_going = False    # ตั้งค่า keep_going ให้เป็น False เพื่อออกจากลูปและปิดโปรแกรม
+
+                else:    # ถ้าผู้ใช้ใส่หมายเลขเมนูที่ไม่ถูกต้อง
+                    print("ใส่หมายเลขเมนูให้ถูกต้อง")   # แสดงข้อความแจ้งว่าหมายเลขที่เลือกไม่ถูกต้อง
+                    time.sleep(1)    # หน่วงเวลาการทำงาน 1 วินาที
+
+            except ValueError:   # ถ้าผู้ใช้ใส่ข้อมูลที่ไม่ใช่ตัวเลข จะเกิดข้อผิดพลาด ValueError
+                print("กรุณาใส่หมายเลขให้ถูกต้อง")   # แสดงข้อความแจ้งให้ผู้ใช้กรอกข้อมูลใหม่
+                time.sleep(1)    # หน่วงเวลาการทำงาน 1 วินาที
+
+    except Exception as e:   # ดักจับข้อผิดพลาดอื่น ๆ ที่เกิดขึ้นในโปรแกรม
+        print(f"เกิดข้อผิดพลาด: {e}")   # แสดงข้อความข้อผิดพลาดที่เกิดขึ้น
+
+if __name__ == "__main__":    # ตรวจสอบว่าฟังก์ชัน main ถูกเรียกใช้โดยตรง (ไม่ใช่การนำเข้าเป็นโมดูล)
+    main()   # เรียกใช้ฟังก์ชัน main เพื่อเริ่มการทำงานของโปรแกรม
