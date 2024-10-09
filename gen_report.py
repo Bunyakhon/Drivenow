@@ -38,12 +38,12 @@ def report_data(number_menu):
                     # เพิ่มแถวในตารางด้วยข้อมูลที่ถอดรหัสแล้ว
                     table.add_row([
                         record[0],  # ลำดับการเช่า
-                        record[1].decode().strip(),  # ชื่อผู้เช่า (ถอดรหัสจาก bytes และลบช่องว่าง)
-                        record[2].decode().strip(),  # รุ่นรถ (ถอดรหัสจาก bytes และลบช่องว่าง)
-                        record[3].decode().strip(),  # ประเภทรถ (ถอดรหัสจาก bytes และลบช่องว่าง)
-                        record[4].decode().strip(),  # วันที่เช่า (ถอดรหัสจาก bytes และลบช่องว่าง)
-                        record[5].decode().strip(),  # วันที่คืน (ถอดรหัสจาก bytes และลบช่องว่าง)
-                        record[6]  # ราคารวม
+                        record[1].decode().strip('\x00'),  # ชื่อผู้เช่า (ถอดรหัสจาก bytes และลบช่องว่าง)
+                        record[2].decode().strip('\x00'),  # รุ่นรถ (ถอดรหัสจาก bytes และลบช่องว่าง)
+                        record[3].decode().strip('\x00'),  # ประเภทรถ (ถอดรหัสจาก bytes และลบช่องว่าง)
+                        record[4].decode().strip('\x00'),  # วันที่เช่า (ถอดรหัสจาก bytes และลบช่องว่าง)
+                        record[5].decode().strip('\x00'),  # วันที่คืน (ถอดรหัสจาก bytes และลบช่องว่าง)
+                        f"{record[6]:.2f}"  # ราคารวม
                     ])
 
                     # คำนวณรายได้รวมและจำนวนการเช่ารวม
@@ -51,7 +51,7 @@ def report_data(number_menu):
                     total_rentals += 1
 
                     # เก็บสถิติสำหรับประเภทของรถ
-                    car_type = record[3].decode().strip()
+                    car_type = record[3].decode().strip('\x00')
                     car_type_stats[car_type]['count'] += 1  # เพิ่มจำนวนครั้งการเช่าสำหรับประเภทนี้
                     car_type_stats[car_type]['income'] += record[6]  # เพิ่มรายได้สำหรับประเภทนี้
 
@@ -66,7 +66,7 @@ def report_data(number_menu):
                 # เปิดไฟล์รายงานสำหรับเขียนข้อมูล
                 with open("report/" + report_file_name, "w", encoding="utf-8") as report_file:
                     # เขียนส่วนหัวของรายงานลงในไฟล์
-                    header = f"{'='*100}\n\nReport date : {current_date}\n{'=' * 100}\n{table}\n{'=' * 100}\n"
+                    header = f"{'='*100}\nReport date : {current_date}\n{'=' * 100}\n{table}\n{'=' * 100}\n"
                     report_file.write(header)
                     print(header)  # แสดงส่วนหัวของรายงานบนหน้าจอ
 
@@ -74,9 +74,9 @@ def report_data(number_menu):
                     rental_stats = (
                         f"Rental statistics\n{'=' * 100}\n"
                         f"Rental amount : {total_rentals}\n"  # จำนวนการเช่าทั้งหมด
-                        f"Maximum rent  : {max(record[6] for record in records)}\n"  # ค่าเช่าสูงสุด
-                        f"Lowest rent   : {min(record[6] for record in records)}\n"  # ค่าเช่าต่ำสุด
-                        f"Total income  : {total_income}\n{'=' * 100}\n"  # รายได้รวมทั้งหมด
+                        f"Maximum rent  : {max(record[6] for record in records):.2f}\n"  # ค่าเช่าสูงสุด
+                        f"Lowest rent   : {min(record[6] for record in records):.2f}\n"  # ค่าเช่าต่ำสุด
+                        f"Total income  : {total_income:.2f}\n{'=' * 100}\n"  # รายได้รวมทั้งหมด
                     )
                     report_file.write(rental_stats)
                     print(rental_stats)  # แสดงสถิติการเช่าบนหน้าจอ
@@ -85,13 +85,13 @@ def report_data(number_menu):
                     car_type_table = PrettyTable()
                     car_type_table.field_names = ["Car Type", "Total Rentals", "Total Income"]
                     for car_type, stats in car_type_stats.items():
-                        car_type_table.add_row([car_type, stats['count'], stats['income']])
+                        car_type_table.add_row([car_type, stats['count'], f"{stats['income']:.2f}"])
 
                     # เขียนสถิติตามประเภทของรถลงในไฟล์รายงาน
                     car_type_stats_output = (
                         f"Statistics by car type\n{'=' * 100}\n"
                         f"{car_type_table}\n"
-                        f"Total income : {total_income}\n{'=' * 100}\n"
+                        f"Total income : {total_income:.2f}\n{'=' * 100}\n"
                     )
                     report_file.write(car_type_stats_output)
                     print(car_type_stats_output)  # แสดงสถิติตามประเภทรถบนหน้าจอ
@@ -103,8 +103,8 @@ def report_data(number_menu):
                     least_rented_type = min(car_type_stats.items(), key=lambda x: x[1]['count'])
 
                     car_type_summary = (
-                        f"Highest income from car type: {max_income_type[0]} = {max_income_type[1]['income']}\n"  # รายได้สูงสุดจากประเภทรถ
-                        f"Lowest income from car type : {min_income_type[0]} = {min_income_type[1]['income']}\n"  # รายได้ต่ำสุดจากประเภทรถ
+                        f"Highest income from car type: {max_income_type[0]} = {max_income_type[1]['income']:.2f}\n"  # รายได้สูงสุดจากประเภทรถ
+                        f"Lowest income from car type : {min_income_type[0]} = {min_income_type[1]['income']:.2f}\n"  # รายได้ต่ำสุดจากประเภทรถ
                         f"Most rented type : {most_rented_type[0]}\n"  # ประเภทรถที่ถูกเช่ามากที่สุด
                         f"Least rented type: {least_rented_type[0]}\n"  # ประเภทรถที่ถูกเช่าน้อยที่สุด
                     )
